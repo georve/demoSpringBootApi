@@ -3,7 +3,9 @@ package com.georve.demoSpringBootApi.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.georve.demoSpringBootApi.model.Session;
+import com.georve.demoSpringBootApi.model.Speaker;
 import com.georve.demoSpringBootApi.services.SessionService;
+import com.georve.demoSpringBootApi.services.SpeakerService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,43 +35,45 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class SessionControllerTest {
+public class SpeakerControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private SessionService service;
-    /*
-     first error java.lang.AssertionError: No value at JSON path “$”
-     */
+    private SpeakerService service;
+    
+    
+     
     @Test
-    void getAllSession() throws Exception {
-        List<Session> sessions=new ArrayList<Session>();
-        sessions.add(this.getSession());
-        when(service.findAll()).thenReturn(sessions);
+    void getAllSpeakers() throws Exception {
+        List<Speaker> sp=new ArrayList<Speaker>();
+        sp.add(this.getSpeaker());
+        when(service.findAll()).thenReturn(sp);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/sessions")
+        mockMvc.perform(MockMvcRequestBuilders.get("/speakers")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(jsonPath("$",hasSize(1))).andDo(print());
 
     }
 
+
+
     @Test
     void getOneSessionById() throws Exception {
-        when(service.findById(any(Long.class))).thenReturn(this.getSession());
+        when(service.findById(any(Long.class))).thenReturn(this.getSpeaker());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/sessions/1")
+        mockMvc.perform(MockMvcRequestBuilders.get("/speakers/1")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.session_id").value(1L))
-                .andExpect(jsonPath("$.session_name").value("public general"));
+                .andExpect(jsonPath("$.speaker_id").value(1L))
+                .andExpect(jsonPath("$.first_name").value("Georman"));
     }
 
     @Test
-    void successfullyCreateASession() throws Exception {
-        Session eatToDo = this.getSession();
-        when(service.saveOrUpdate(any(Session.class))).thenReturn(eatToDo);
+    void successfullyCreateASpeaker() throws Exception {
+        Speaker eatToDo = this.getSpeaker();
+        when(service.saveOrUpdate(any(Speaker.class))).thenReturn(eatToDo);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String eatToDoJSON = null;
@@ -79,22 +83,23 @@ public class SessionControllerTest {
             e.printStackTrace();
         }
 
-        ResultActions result = mockMvc.perform(post("/sessions")
+        ResultActions result = mockMvc.perform(post("/speakers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(eatToDoJSON));
 
+
         result.andExpect(status().isCreated())
-                .andExpect(jsonPath("$.session_id").value(1L))
-                .andExpect(jsonPath("$.session_name").value("public general"));
+                .andExpect(jsonPath("$.speaker_id").value(1L))
+                .andExpect(jsonPath("$.first_name").value("Georman"));
     }
 
     @Test
     void successfullyDeleteSessionById() throws Exception{
 
-        when(service.findById(any(Long.class))).thenReturn(this.getSession());
+        when(service.findById(any(Long.class))).thenReturn(this.getSpeaker());
         doNothing().when(service).deleteById(any(Long.class));
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/sessions/1")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/speakers/1")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk());
 
@@ -105,10 +110,10 @@ public class SessionControllerTest {
     @Test
     void successfullyUpdate() throws Exception{
 
-        Session eatToDo = this.getSession();
+        Speaker eatToDo = this.getSpeaker();
 
-        when(service.findById(any(Long.class))).thenReturn(this.getSession());
-        when(service.saveOrUpdate(any(Session.class))).thenReturn(this.getSession());
+        when(service.findById(any(Long.class))).thenReturn(this.getSpeaker());
+        when(service.saveOrUpdate(any(Speaker.class))).thenReturn(this.getSpeaker());
 
         ObjectMapper objectMapper = new ObjectMapper();
         String eatToDoJSON = null;
@@ -119,30 +124,27 @@ public class SessionControllerTest {
         }
 
 
-        ResultActions result= mockMvc.perform(MockMvcRequestBuilders.put("/sessions/1")
+        ResultActions result= mockMvc.perform(MockMvcRequestBuilders.put("/speakers/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(eatToDoJSON)
         );
 
         result.andExpect(status().isOk())
-                .andExpect(jsonPath("$.session_id").value(1L))
-                .andExpect(jsonPath("$.session_name").value("public general"));
+                .andExpect(jsonPath("$.speaker_id").value(1L))
+                .andExpect(jsonPath("$.first_name").value("Georman"));
 
 
     }
 
-
-
-
-
-    private Session getSession() {
-        Session sb=new Session();
-        sb.setSession_id(1L);
-        sb.setSession_name("public general");
-        sb.setSession_description("To everyone");
-        sb.setSession_length(24);
-        return sb;
+    private Speaker getSpeaker() {
+        Speaker value=new Speaker();
+        value.setFirst_name("Georman");
+        value.setLast_name("Calderon");
+        value.setCompany("georve");
+        value.setSpeaker_bio("nueva biografia");
+        value.setSpeaker_id(1L);
+        value.setTitle("titulo_1");
+        return value;
     }
+
 }
-
-

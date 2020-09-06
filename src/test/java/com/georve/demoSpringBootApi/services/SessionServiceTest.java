@@ -57,9 +57,9 @@ public class SessionServiceTest {
     @Test
     void deleteById(){
         Session current=this.getSession();
-        repository.saveAndFlush(current);
+        Session saved=repository.saveAndFlush(current);
         SessionService service=new SessionService(repository);
-        service.deleteById(1L);
+        service.deleteById(saved.getSession_id());
 
         Double lastSession=service.count();
         assertTrue(lastSession.compareTo(0.0)==0);
@@ -69,7 +69,7 @@ public class SessionServiceTest {
     void saveASession() {
         SessionService service=new SessionService(repository);
         Session todoSample = this.getSession();
-        service.save(todoSample);
+        service.saveOrUpdate(todoSample);
         assertEquals(1.0, service.count());
     }
 

@@ -24,8 +24,8 @@ public class SessionService {
         return respository.findAll();
     }
 
-    public Session save(Session any) {
-        return respository.save(any);
+    public Session saveOrUpdate(Session any) {
+        return respository.saveAndFlush(any);
     }
 
     public double count() {
@@ -40,8 +40,6 @@ public class SessionService {
          respository.deleteById(any);
     }
 
-    public Session update(Session current) {
-      return respository.saveAndFlush(current);
-    }
+
 
 }
