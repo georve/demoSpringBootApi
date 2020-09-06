@@ -35,4 +35,13 @@ public class SessionService {
     public Session findById(Long any) {
         return respository.getOne(any);
     }
+
+    public void deleteById(Long any) {
+         respository.deleteById(any);
+    }
+
+    public Session update(Session current) {
+      return respository.saveAndFlush(current);
+    }
+
 }

@@ -10,10 +10,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
 
 
 @SpringBootTest
@@ -55,12 +55,21 @@ public class SessionServiceTest {
     }
 
     @Test
+    void deleteById(){
+        Session current=this.getSession();
+        repository.saveAndFlush(current);
+        SessionService service=new SessionService(repository);
+        service.deleteById(1L);
+
+        Double lastSession=service.count();
+        assertTrue(lastSession.compareTo(0.0)==0);
+    }
+
+    @Test
     void saveASession() {
         SessionService service=new SessionService(repository);
         Session todoSample = this.getSession();
-
         service.save(todoSample);
-
         assertEquals(1.0, service.count());
     }
 

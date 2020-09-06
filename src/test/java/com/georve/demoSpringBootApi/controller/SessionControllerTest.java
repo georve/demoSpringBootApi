@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -26,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -86,6 +86,49 @@ public class SessionControllerTest {
         result.andExpect(status().isCreated())
                 .andExpect(jsonPath("$.session_id").value(1L))
                 .andExpect(jsonPath("$.session_name").value("public general"));
+    }
+
+    @Test
+    void successfullyDeleteSessionById() throws Exception{
+
+        when(service.findById(any(Long.class))).thenReturn(this.getSession());
+        doNothing().when(service).deleteById(any(Long.class));
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/sessions/1")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
+
+        verify(service, times(1)).deleteById(1L);
+
+    }
+
+    @Test
+    void successfullyUpdate() throws Exception{
+
+        Session eatToDo = this.getSession();
+
+        when(service.findById(any(Long.class))).thenReturn(this.getSession());
+        when(service.update(any(Session.class))).thenReturn(this.getSession());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String eatToDoJSON = null;
+        try {
+            eatToDoJSON = objectMapper.writeValueAsString(eatToDo);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+
+        ResultActions result= mockMvc.perform(MockMvcRequestBuilders.put("/sessions/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(eatToDoJSON)
+        );
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.session_id").value(1L))
+                .andExpect(jsonPath("$.session_name").value("public general"));
+
+
     }
 
 
