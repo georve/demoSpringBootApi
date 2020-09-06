@@ -2,6 +2,7 @@ package com.georve.demoSpringBootApi.services;
 
 import com.georve.demoSpringBootApi.model.Session;
 import com.georve.demoSpringBootApi.repository.SessionRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +11,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 
 @SpringBootTest
@@ -17,6 +21,11 @@ public class SessionServiceTest {
 
     @Autowired
     private SessionRepository repository;
+
+    @AfterEach
+    void tearDown(){
+        repository.deleteAll();
+    }
 
     @Test
     void getAllSession(){
@@ -31,6 +40,17 @@ public class SessionServiceTest {
      assertEquals(current.getSession_description(), lastSession.getSession_description());
      assertEquals(current.getSession_id(), lastSession.getSession_id());
 
+
+    }
+
+    @Test// verify proxy
+    void getOneSessionById(){
+        Session current=this.getSession();
+        repository.save(current);
+        SessionService service=new SessionService(repository);
+        //when(repository.getOne(1L)).thenReturn(this.getSession());
+        Session lastSession=service.findById(1L);
+        assertNotNull(lastSession);
 
     }
 

@@ -24,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -55,6 +56,17 @@ public class SessionControllerTest {
     }
 
     @Test
+    void getOneSessionById() throws Exception {
+        when(service.findById(any(Long.class))).thenReturn(this.getSession());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/sessions/1")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk())
+                .andExpect(jsonPath("$.session_id").value(1L))
+                .andExpect(jsonPath("$.session_name").value("public general"));
+    }
+
+    @Test
     void successfullyCreateASession() throws Exception {
         Session eatToDo = this.getSession();
         when(service.save(any(Session.class))).thenReturn(eatToDo);
@@ -67,14 +79,16 @@ public class SessionControllerTest {
             e.printStackTrace();
         }
 
-        ResultActions result = mockMvc.perform(post("/Session")
+        ResultActions result = mockMvc.perform(post("/sessions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(eatToDoJSON));
 
         result.andExpect(status().isCreated())
-                .andExpect(jsonPath("$.text").value("Eat thrice"))
-                .andExpect(jsonPath("$.completed").value(true));
+                .andExpect(jsonPath("$.session_id").value(1L))
+                .andExpect(jsonPath("$.session_name").value("public general"));
     }
+
+
 
 
 
