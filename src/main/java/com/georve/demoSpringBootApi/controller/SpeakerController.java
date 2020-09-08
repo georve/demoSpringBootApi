@@ -1,9 +1,13 @@
 package com.georve.demoSpringBootApi.controller;
 
 
+import com.georve.demoSpringBootApi.error.CustomException;
+import com.georve.demoSpringBootApi.error.ResourceAlreadyExists;
+import com.georve.demoSpringBootApi.error.ResourceNotFoundException;
 import com.georve.demoSpringBootApi.model.Session;
 import com.georve.demoSpringBootApi.model.Speaker;
 import com.georve.demoSpringBootApi.services.SpeakerService;
+import com.georve.demoSpringBootApi.utils.ExceptionDefinitions;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,17 +25,29 @@ public class SpeakerController {
 
     @GetMapping
     ResponseEntity<List<Speaker>> getAllSpeakers(){
-        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
+        List<Speaker> sessions = service.findAll();
+        if (sessions == null || sessions.isEmpty()) {
+            throw new CustomException(ExceptionDefinitions.EMPTY_RESOURCE);
+        }
+        return new ResponseEntity<>(sessions, HttpStatus.OK);
     }
 
     @GetMapping
     @RequestMapping("{id}")
     ResponseEntity<Speaker> getSpeakerById(@PathVariable Long id){
-        return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
+        Speaker current=service.findById(id);
+        if(current==null){
+            throw new ResourceNotFoundException(ExceptionDefinitions.NOT_FOUND);
+        }
+        return new ResponseEntity<>(current, HttpStatus.OK);
     }
 
     @PostMapping
     ResponseEntity<Speaker> create(@RequestBody Speaker speaker) {
+
+        if (service.exit(speaker)) {
+            throw new ResourceAlreadyExists(ExceptionDefinitions.ALREADY_EXIST);
+        }
         return new ResponseEntity<>(service.saveOrUpdate(speaker), HttpStatus.CREATED);
     }
 
@@ -39,7 +55,7 @@ public class SpeakerController {
     ResponseEntity<Void> delete(@PathVariable Long id) {
         Speaker current=service.findById(id);
         if(current==null){
-            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException(ExceptionDefinitions.NOT_FOUND);
         }
 
         service.deleteById(id);
@@ -52,7 +68,7 @@ public class SpeakerController {
         Speaker current = service.findById(id);
 
         if (current == null) {
-            return new ResponseEntity<Speaker>(HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException(ExceptionDefinitions.NOT_FOUND);
         }
 
         BeanUtils.copyProperties(se,current,"speaker_id");

@@ -1,7 +1,11 @@
 package com.georve.demoSpringBootApi.controller;
 
+import com.georve.demoSpringBootApi.error.CustomException;
+import com.georve.demoSpringBootApi.error.ResourceAlreadyExists;
+import com.georve.demoSpringBootApi.error.ResourceNotFoundException;
 import com.georve.demoSpringBootApi.model.Session;
 import com.georve.demoSpringBootApi.services.SessionService;
+import com.georve.demoSpringBootApi.utils.ExceptionDefinitions;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,17 +22,32 @@ public class SessionController {
 
     @GetMapping
     ResponseEntity<List<Session>> getAllSessions(){
-        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
+        List<Session> sessions = service.findAll();
+
+        if (sessions == null || sessions.isEmpty()) {
+            throw new CustomException(ExceptionDefinitions.EMPTY_RESOURCE);
+        }
+
+        return new ResponseEntity<>(sessions, HttpStatus.OK);
     }
 
     @GetMapping
     @RequestMapping("{id}")
     ResponseEntity<Session> getSessionsById(@PathVariable Long id){
-        return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
+        Session current=service.findById(id);
+        if(current==null){
+            throw new ResourceNotFoundException(ExceptionDefinitions.NOT_FOUND);
+        }
+        return new ResponseEntity<>(current, HttpStatus.OK);
     }
 
     @PostMapping
     ResponseEntity<Session> create(@RequestBody Session session) {
+
+        if (service.exit(session)) {
+            throw new ResourceAlreadyExists(ExceptionDefinitions.ALREADY_EXIST);
+        }
+
         return new ResponseEntity<>(service.saveOrUpdate(session), HttpStatus.CREATED);
     }
 
@@ -36,7 +55,8 @@ public class SessionController {
     ResponseEntity<Void> delete(@PathVariable Long id) {
         Session current=service.findById(id);
         if(current==null){
-            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException(ExceptionDefinitions.NOT_FOUND);
+
         }
 
         service.deleteById(id);
@@ -49,7 +69,7 @@ public class SessionController {
         Session current = service.findById(id);
 
         if (current == null) {
-            return new ResponseEntity<Session>(HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException(ExceptionDefinitions.NOT_FOUND);
         }
 
         BeanUtils.copyProperties(se,current,"session_id");

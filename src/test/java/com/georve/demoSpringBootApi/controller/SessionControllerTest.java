@@ -2,6 +2,8 @@ package com.georve.demoSpringBootApi.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.georve.demoSpringBootApi.error.CustomException;
+import com.georve.demoSpringBootApi.error.ResourceNotFoundException;
 import com.georve.demoSpringBootApi.model.Session;
 import com.georve.demoSpringBootApi.services.SessionService;
 import org.junit.jupiter.api.Test;
@@ -17,6 +19,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -56,6 +60,18 @@ public class SessionControllerTest {
     }
 
     @Test
+    public void getAllSession_empty() throws Exception {
+        List<Session> sessions=new ArrayList<Session>();
+        when(service.findAll()).thenReturn(sessions);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/sessions")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof CustomException))
+                .andExpect(result -> assertEquals("Resource is empty in DB.", result.getResolvedException().getMessage()));
+    }
+
+    @Test
     void getOneSessionById() throws Exception {
         when(service.findById(any(Long.class))).thenReturn(this.getSession());
 
@@ -64,6 +80,17 @@ public class SessionControllerTest {
         ).andExpect(status().isOk())
                 .andExpect(jsonPath("$.session_id").value(1L))
                 .andExpect(jsonPath("$.session_name").value("public general"));
+    }
+
+    @Test
+    public void getOneSessio_empty() throws Exception {
+        when(service.findById(any(Long.class))).thenReturn(null);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/sessions/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResourceNotFoundException))
+                .andExpect(result -> assertEquals("Request resource is not found.", result.getResolvedException().getMessage()));
     }
 
     @Test

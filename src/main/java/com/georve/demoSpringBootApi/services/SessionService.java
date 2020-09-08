@@ -3,6 +3,7 @@ package com.georve.demoSpringBootApi.services;
 import com.georve.demoSpringBootApi.model.Session;
 import com.georve.demoSpringBootApi.repository.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -39,6 +40,8 @@ public class SessionService {
     public void deleteById(Long any) {
          respository.deleteById(any);
     }
+
+    public boolean exit(Session se){ return respository.exists(Example.of(se)); }
 
 
 
