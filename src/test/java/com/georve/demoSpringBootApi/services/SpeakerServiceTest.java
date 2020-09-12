@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,14 +30,14 @@ public class SpeakerServiceTest {
     void getAllSpeaker(){
         Speaker current=this.getSpeaker();
         repository.save(current);
-        SpeakerService service=new SpeakerService(repository);
+        SpeakerService service=new SpeakerServiceImpl(repository);
 
         List<Speaker> list=service.findAll();
         Speaker lastSpeaker=list.get(0);
 
         assertEquals(current.getTitle(), lastSpeaker.getTitle());
         assertEquals(current.getCompany(), lastSpeaker.getCompany());
-        assertEquals(current.getSpeaker_id(), lastSpeaker.getSpeaker_id());
+        assertEquals(current.getId(), lastSpeaker.getId());
 
 
     }
@@ -45,10 +46,10 @@ public class SpeakerServiceTest {
     void getOneSpeakerById(){
         Speaker current=this.getSpeaker();
         repository.save(current);
-        SpeakerService service=new SpeakerService(repository);
+        SpeakerService service=new SpeakerServiceImpl(repository);
         //when(repository.getOne(1L)).thenReturn(this.getSession());
-        Speaker lastSession=service.findById(1L);
-        assertNotNull(lastSession);
+        Optional<Speaker> lastSession=service.findById(1L);
+        assertNotNull(lastSession.get());
 
     }
 
@@ -56,8 +57,8 @@ public class SpeakerServiceTest {
     void deleteById(){
         Speaker current=this.getSpeaker();
         Speaker saved=repository.saveAndFlush(current);
-        SpeakerService service=new SpeakerService(repository);
-        service.deleteById(saved.getSpeaker_id());
+        SpeakerService service=new SpeakerServiceImpl(repository);
+        service.deleteById(saved.getId());
 
         Double lastSession=service.count();
         assertTrue(lastSession.compareTo(0.0)==0);
@@ -65,7 +66,7 @@ public class SpeakerServiceTest {
 
     @Test
     void saveASpeaker() {
-        SpeakerService service=new SpeakerService(repository);
+        SpeakerService service=new SpeakerServiceImpl(repository);
         Speaker todoSample = this.getSpeaker();
         service.saveOrUpdate(todoSample);
         assertEquals(1.0, service.count());
@@ -74,7 +75,7 @@ public class SpeakerServiceTest {
 
     private Speaker getSpeaker() {
         Speaker sb=new Speaker();
-        sb.setSpeaker_id(1L);
+        sb.setId(1L);
         sb.setTitle("public general");
         sb.setCompany("To everyone");
         sb.setSpeaker_bio("New Speaker");

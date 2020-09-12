@@ -12,11 +12,9 @@ import java.util.List;
 @Table(name="speakers") // the table in the database tht will contain our cars data
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
-public class Speaker {
+public class Speaker extends AbstractBaseEntity {
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long speaker_id;
+
     private String first_name;
     private String last_name;
     private String title;
@@ -32,15 +30,12 @@ public class Speaker {
     @ManyToMany(mappedBy="speakers")
     private List<Session> sessions;
 
+    @JsonIgnore
+    @ManyToMany(mappedBy="speakers")
+    private List<Workshops> workshops;
+
     public Speaker(){}
 
-    public Long getSpeaker_id() {
-        return speaker_id;
-    }
-
-    public void setSpeaker_id(Long speaker_id) {
-        this.speaker_id = speaker_id;
-    }
 
     public String getFirst_name() {
         return first_name;
@@ -89,4 +84,22 @@ public class Speaker {
     public void setSpeaker_photo(byte[] speaker_photo) {
         this.speaker_photo = speaker_photo;
     }
+
+
+    public List<Session> getSessions() {
+        return sessions;
+    }
+
+    public void setSessions(List<Session> sessions) {
+        this.sessions = sessions;
+    }
+
+    public List<Workshops> getWorkshops() {
+        return workshops;
+    }
+
+    public void setWorkshops(List<Workshops> workshops) {
+        this.workshops = workshops;
+    }
+
 }

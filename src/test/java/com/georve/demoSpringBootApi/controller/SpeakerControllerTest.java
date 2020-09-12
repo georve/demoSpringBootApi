@@ -61,7 +61,7 @@ public class SpeakerControllerTest {
 
     @Test
     void getOneSessionById() throws Exception {
-        when(service.findById(any(Long.class))).thenReturn(this.getSpeaker());
+        when(service.findById(any(Long.class))).thenReturn(Optional.of(this.getSpeaker()));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/speakers/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -96,7 +96,7 @@ public class SpeakerControllerTest {
     @Test
     void successfullyDeleteSessionById() throws Exception{
 
-        when(service.findById(any(Long.class))).thenReturn(this.getSpeaker());
+        when(service.findById(any(Long.class))).thenReturn(Optional.of(this.getSpeaker()));
         doNothing().when(service).deleteById(any(Long.class));
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/speakers/1")
@@ -112,7 +112,7 @@ public class SpeakerControllerTest {
 
         Speaker eatToDo = this.getSpeaker();
 
-        when(service.findById(any(Long.class))).thenReturn(this.getSpeaker());
+        when(service.findById(any(Long.class))).thenReturn(Optional.of(this.getSpeaker()));
         when(service.saveOrUpdate(any(Speaker.class))).thenReturn(this.getSpeaker());
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -142,7 +142,7 @@ public class SpeakerControllerTest {
         value.setLast_name("Calderon");
         value.setCompany("georve");
         value.setSpeaker_bio("nueva biografia");
-        value.setSpeaker_id(1L);
+        value.setId(1L);
         value.setTitle("titulo_1");
         return value;
     }
