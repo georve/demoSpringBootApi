@@ -2,6 +2,7 @@ package com.georve.demoSpringBootApi.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.georve.demoSpringBootApi.config.Profiles;
 import com.georve.demoSpringBootApi.error.ResourceAlreadyExists;
 import com.georve.demoSpringBootApi.error.ResourceNotFoundException;
 import com.georve.demoSpringBootApi.model.Session;
@@ -19,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -60,7 +62,6 @@ public class UserControllerTest {
 
         User eatToDo = this.getUserTosave();
         String token=this.createToken("georve");
-        when(service.findByUserName(any(String.class))).thenReturn(geUserDetails());
         when(service.exists(any(User.class))).thenReturn(false);
         when(service.saveOrUpdate(any(User.class))).thenReturn(eatToDo);
 
@@ -93,7 +94,6 @@ public class UserControllerTest {
 
         String token=this.createToken("georve");
         User eatToDo = this.getUserTosave();
-        when(service.findByUserName(any(String.class))).thenReturn(geUserDetails());
         when(service.exists(any(User.class))).thenReturn(true);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -147,7 +147,7 @@ public class UserControllerTest {
 
         User eatToDo = this.getUserTosave();
 
-        when(service.findByUserName(any(String.class))).thenReturn(geUserDetails());
+        when(service.findByUserName(any(String.class))).thenReturn(getUserTosave());
 
         ObjectMapper objectMapper = new ObjectMapper();
         String eatToDoJSON = null;
@@ -174,7 +174,7 @@ public class UserControllerTest {
 
         User eatToDo = this.getUserTosave();
 
-        when(service.findByUserName(any(String.class))).thenReturn(geUserDetails());
+        when(service.findByUserName(any(String.class))).thenReturn(getUserTosave());
 
         ObjectMapper objectMapper = new ObjectMapper();
         String eatToDoJSON = null;

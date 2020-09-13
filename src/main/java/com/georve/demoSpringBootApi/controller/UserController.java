@@ -7,6 +7,7 @@ import com.georve.demoSpringBootApi.error.ResourceNotFoundException;
 import com.georve.demoSpringBootApi.model.JwtResponse;
 import com.georve.demoSpringBootApi.model.Speaker;
 import com.georve.demoSpringBootApi.model.User;
+import com.georve.demoSpringBootApi.services.JwtUserDetailsService;
 import com.georve.demoSpringBootApi.services.SpeakerService;
 import com.georve.demoSpringBootApi.services.UserService;
 import com.georve.demoSpringBootApi.utils.ExceptionDefinitions;
@@ -18,6 +19,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +33,12 @@ public class UserController {
     private UserService service;
 
     @Autowired
+    private PasswordEncoder bcryptEncoder;
+
+    @Autowired(required=true)
+    private JwtUserDetailsService jwtUserDetailsService;
+
+    @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
@@ -39,6 +47,7 @@ public class UserController {
     @PostMapping("/register")
     ResponseEntity<User> create(@RequestBody User user) {
 
+        user.setPassword(bcryptEncoder.encode(user.getPassword()));
         if (service.exists(user)) {
             throw new ResourceAlreadyExists(ExceptionDefinitions.ALREADY_EXIST);
         }
@@ -51,16 +60,12 @@ public class UserController {
 
         authenticate(user.getUsername(), user.getPassword());
 
-      UserDetails found= service.findByUserName(user.getUsername());
+      UserDetails found= jwtUserDetailsService.loadUserByUsername(user.getUsername());
 
-        if (found==null) {
-            throw new ResourceNotFoundException(ExceptionDefinitions.NOT_FOUND);
-        }
-
-        final String token = jwtTokenUtil.generateToken(found);
+      final String token = jwtTokenUtil.generateToken(found);
 
 
-        return new ResponseEntity<>(new JwtResponse(token), HttpStatus.OK);
+      return new ResponseEntity<>(new JwtResponse(token), HttpStatus.OK);
     }
 
 
