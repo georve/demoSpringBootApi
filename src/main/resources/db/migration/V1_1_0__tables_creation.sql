@@ -7,8 +7,8 @@ CREATE TABLE attendees
     company      varchar(50) NULL,
     email        varchar(80) NOT NULL,
     phone_number varchar(20) NULL,
-    createdAt CURRENT_DATE,
-    updateAt CURRENT_DATE,
+    createdAt    date,
+    updateAt     date,
 );
 
 CREATE TABLE ticket_types
@@ -17,8 +17,8 @@ CREATE TABLE ticket_types
     ticket_type_name  varchar(30)  NOT NULL,
     description       varchar(100) NOT NULL,
     includes_workshop boolean      NOT NULL,
-    createdAt CURRENT_DATE,
-    updateAt CURRENT_DATE,
+    createdAt    date,
+    updateAt     date,
 );
 
 CREATE TABLE pricing_categories
@@ -27,8 +27,8 @@ CREATE TABLE pricing_categories
     pricing_category_name varchar(20) NOT NULL,
     pricing_start_date    date        NOT NULL,
     pricing_end_date      date        NOT NULL,
-    createdAt CURRENT_DATE,
-    updateAt CURRENT_DATE,
+    createdAt    date,
+    updateAt     date,
 );
 
 CREATE TABLE ticket_prices
@@ -37,8 +37,8 @@ CREATE TABLE ticket_prices
     ticket_type_code      varchar(1)    NOT NULL REFERENCES ticket_types (ticket_type_code),
     pricing_category_code varchar(1)    NOT NULL REFERENCES pricing_categories (pricing_category_code),
     base_price            numeric(8, 2) NOT NULL,
-    createdAt CURRENT_DATE,
-    updateAt CURRENT_DATE,
+    createdAt    date,
+    updateAt     date,
 );
 
 CREATE TABLE discount_codes
@@ -47,7 +47,9 @@ CREATE TABLE discount_codes
     discount_code    varchar(20)   NOT NULL,
     discount_name    varchar(30)   NOT NULL,
     discount_type    varchar(1)    NOT NULL,
-    discount_amount  numeric(8, 2) NOT NULL
+    discount_amount  numeric(8, 2) NOT NULL,
+    createdAt    date,
+    updateAt     date,
 );
 
 CREATE TABLE attendee_tickets
@@ -56,7 +58,9 @@ CREATE TABLE attendee_tickets
     attendee_id        BIGINT(20)       NOT NULL REFERENCES attendees (attendee_id),
     ticket_price_id    BIGINT(20)       NOT NULL REFERENCES ticket_prices (ticket_price_id),
     discount_code_id   BIGINT(20)       NULL REFERENCES discount_codes (discount_code_id),
-    net_price          numeric(8, 2) NOT NULL
+    net_price          numeric(8, 2) NOT NULL,
+    createdAt    date,
+     updateAt     date,
 );
 
 CREATE TABLE time_slots
@@ -65,7 +69,9 @@ CREATE TABLE time_slots
     time_slot_date       date                   NOT NULL,
     start_time           time  					NOT NULL,
     end_time             time  					NOT NULL,
-    is_keynote_time_slot boolean default false  NOT NULL
+    is_keynote_time_slot boolean default false  NOT NULL,
+    createdAt    date,
+     updateAt     date,
 );
 
 CREATE TABLE sessions
@@ -73,7 +79,9 @@ CREATE TABLE sessions
     id          BIGINT(20) PRIMARY KEY,
     session_name        varchar(80)   NOT NULL,
     session_description varchar(1024) NOT NULL,
-    session_length      integer       NOT NULL
+    session_length      integer       NOT NULL,
+    createdAt    date,
+     updateAt     date,
 );
 
 CREATE TABLE session_schedule
@@ -81,13 +89,17 @@ CREATE TABLE session_schedule
     id  BIGINT(20) PRIMARY KEY,
     time_slot_id BIGINT(20)     NOT NULL REFERENCES time_slots (time_slot_id),
     session_id   BIGINT(20)     NOT NULL REFERENCES sessions (session_id),
-    room         varchar(30) NOT NULL
+    room         varchar(30) NOT NULL,
+    createdAt    date,
+    updateAt     date,
 );
 
 CREATE TABLE tags
 (
     id      BIGINT(20) PRIMARY KEY,
-    description varchar(30) NOT NULL
+    description varchar(30) NOT NULL,
+    createdAt    date,
+    updateAt     date,
 );
 
 CREATE TABLE session_tags
@@ -104,7 +116,9 @@ CREATE TABLE speakers
     title         varchar(40)   NOT NULL,
     company       varchar(50)   NOT NULL,
     speaker_bio   varchar(2000) NOT NULL,
-    speaker_photo BLOB   		NULL
+    speaker_photo BLOB   		NULL,
+    createdAt    date,
+    updateAt     date,
 );
 
 CREATE TABLE session_speakers
@@ -120,7 +134,9 @@ CREATE TABLE workshops
     description   varchar(1024) NOT NULL,
     requirements  varchar(1024) NOT NULL,
     room          varchar(30)   NOT NULL,
-    capacity      integer       NOT NULL
+    capacity      integer       NOT NULL,
+    createdAt    date,
+    updateAt     date,
 );
 
 CREATE TABLE workshop_speakers
