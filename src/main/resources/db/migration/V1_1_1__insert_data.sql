@@ -8,7 +8,7 @@ VALUES ('E','Early Bird','2019-12-01','2020-01-15'),
        ('R','Regular','2020-01-16','2020-03-20'),
        ('L','Last Minute','2020-03-21','2020-04-07');
 
-INSERT INTO ticket_prices (ticket_price_id,ticket_type_code,pricing_category_code,base_price)
+INSERT INTO ticket_prices (id,ticket_type_code,pricing_category_code,base_price)
 VALUES (1,'P','E',800),
        (2,'P','R',1000),
        (3,'P','L',1200),
@@ -21,7 +21,7 @@ VALUES (1,'P','E',800),
 
 -- TODO: discount_codes
 
-INSERT INTO time_slots (time_slot_id,time_slot_date,start_time,end_time,is_keynote_time_slot)
+INSERT INTO time_slots (id,time_slot_date,start_time,end_time,is_keynote_time_slot)
 VALUES (1,'2020-04-09','9:00','9:45',TRUE),
        (2,'2020-04-09','10:00','11:00',FALSE),
        (3,'2020-04-09','11:15','11:45',FALSE),
@@ -35,7 +35,7 @@ VALUES (1,'2020-04-09','9:00','9:45',TRUE),
        (11,'2020-04-10','13:00','14:00',FALSE),
        (12,'2020-04-10','14:15','15:00',TRUE);
 
-INSERT INTO sessions (session_id,session_name,session_length,session_description)
+INSERT INTO sessions (id,session_name,session_length,session_description)
 VALUES (1,'Keynote - The Golden Age of Software',45,''),
        (2,'A Better Way to Access Data with Spring Data',60,''),
        (3,'A Deep Dive Into Spring IoC',60,''),
@@ -108,7 +108,7 @@ VALUES (1,'Keynote - The Golden Age of Software',45,''),
        (90,'Communication Skills for the Technology Professional',30,''),
        (91,'Personal Kanban',30,'');
 
-INSERT INTO session_schedule (schedule_id,time_slot_id,session_id,room)
+INSERT INTO session_schedule (id,time_slot_id,session_id,room)
 VALUES (1,1,1,'Grand Ballroom'),
        (2,2,2,'Cedar'),
        (3,4,3,'Cedar'),
@@ -181,7 +181,7 @@ VALUES (1,1,1,'Grand Ballroom'),
        (90,9,90,'Sycamore'),
        (91,10,91,'Sycamore');
 
-INSERT INTO tags (tag_id,description)
+INSERT INTO tags (id,description)
 VALUES (1,'.NET'),
        (2,'Java'),
        (3,'Python'),
@@ -197,7 +197,7 @@ VALUES (1,'.NET'),
 
 -- TODO: session_tags
 
-INSERT INTO speakers (speaker_id,first_name,last_name,title,company,speaker_bio,speaker_photo)
+INSERT INTO speakers (id,first_name,last_name,title,company,speaker_bio,speaker_photo)
 VALUES (1,'Sergio','Becker','Senior Developer','MicroOcean Software','Test', null),
        (2,'James','Lowrey','Solutions Architect','Fabrikam Industries','Test', null),
        (3,'Gloria','Franklin','Enerprise Architect','Carved Rock Online','Test', null),
@@ -312,7 +312,7 @@ VALUES (1,40),
        (90,14),
        (91,35);
 
-INSERT INTO workshops (workshop_id,workshop_name,description,requirements,room,capacity)
+INSERT INTO workshops (id,workshop_name,description,requirements,room,capacity)
 VALUES (1,'More Effective Agile Practices','','','Cedar',50),
        (2,'Azure DevOps One Day Bootcamp','','','Cherry',50),
        (3,'Level Up Your Architecure Skills','','','Maple',20),

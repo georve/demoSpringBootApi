@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/speakers")
@@ -45,7 +46,7 @@ public class SpeakerController {
     @PostMapping
     ResponseEntity<Speaker> create(@RequestBody Speaker speaker) {
 
-        if (service.exit(speaker)) {
+        if (service.exists(speaker)) {
             throw new ResourceAlreadyExists(ExceptionDefinitions.ALREADY_EXIST);
         }
         return new ResponseEntity<>(service.saveOrUpdate(speaker), HttpStatus.CREATED);
@@ -65,9 +66,9 @@ public class SpeakerController {
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
     public ResponseEntity<Speaker> update(@PathVariable Long id, @RequestBody Speaker se) {
 
-        Speaker current = service.findById(id);
+        Speaker current=service.findById(id);
 
-        if (current == null) {
+        if (current==null) {
             throw new ResourceNotFoundException(ExceptionDefinitions.NOT_FOUND);
         }
 

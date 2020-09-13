@@ -1,6 +1,11 @@
 CREATE TABLE attendees
 (
-    attendee_id  BIGINT(20) PRIMARY KEY,
+    id  BIGINT(20) PRIMARY KEY,
+    created_at       TIMESTAMP     NULL,
+    created_by       VARCHAR(100)   NULL,
+    update_at        TIMESTAMP      NULL,
+    update_by        VARCHAR(100)   NULL,
+    version          INT(11)     NULL,
     first_name   varchar(30) NOT NULL,
     last_name    varchar(30) NOT NULL,
     title        varchar(40) NULL,
@@ -27,7 +32,12 @@ CREATE TABLE pricing_categories
 
 CREATE TABLE ticket_prices
 (
-    ticket_price_id       BIGINT(20) PRIMARY KEY,
+    id       BIGINT(20) PRIMARY KEY,
+    created_at       TIMESTAMP     NULL,
+    created_by       VARCHAR(100)   NULL,
+    update_at        TIMESTAMP      NULL,
+    update_by        VARCHAR(100)   NULL,
+    version          INT(11)        NULL,
     ticket_type_code      varchar(1)    NOT NULL REFERENCES ticket_types (ticket_type_code),
     pricing_category_code varchar(1)    NOT NULL REFERENCES pricing_categories (pricing_category_code),
     base_price            numeric(8, 2) NOT NULL
@@ -35,7 +45,12 @@ CREATE TABLE ticket_prices
 
 CREATE TABLE discount_codes
 (
-    discount_code_id BIGINT(20) PRIMARY KEY,
+    id BIGINT(20) PRIMARY KEY,
+    created_at       TIMESTAMP     NULL,
+    created_by       VARCHAR(100)   NULL,
+    update_at        TIMESTAMP      NULL,
+    update_by        VARCHAR(100)   NULL,
+    version          INT(11)     NULL,
     discount_code    varchar(20)   NOT NULL,
     discount_name    varchar(30)   NOT NULL,
     discount_type    varchar(1)    NOT NULL,
@@ -44,7 +59,12 @@ CREATE TABLE discount_codes
 
 CREATE TABLE attendee_tickets
 (
-    attendee_ticket_id BIGINT(20) PRIMARY KEY,
+    id BIGINT(20) PRIMARY KEY,
+    created_at       TIMESTAMP     NULL,
+    created_by       VARCHAR(100)   NULL,
+    update_at        TIMESTAMP      NULL,
+    update_by        VARCHAR(100)   NULL,
+    version          INT(11)        NULL,
     attendee_id        BIGINT(20)       NOT NULL REFERENCES attendees (attendee_id),
     ticket_price_id    BIGINT(20)       NOT NULL REFERENCES ticket_prices (ticket_price_id),
     discount_code_id   BIGINT(20)       NULL REFERENCES discount_codes (discount_code_id),
@@ -53,7 +73,12 @@ CREATE TABLE attendee_tickets
 
 CREATE TABLE time_slots
 (
-    time_slot_id         BIGINT(20) PRIMARY KEY,
+    id         BIGINT(20) PRIMARY KEY,
+    created_at       TIMESTAMP     NULL,
+    created_by       VARCHAR(100)   NULL,
+    update_at        TIMESTAMP      NULL,
+    update_by        VARCHAR(100)   NULL,
+    version          INT(11)        NULL,
     time_slot_date       date                   NOT NULL,
     start_time           time  					NOT NULL,
     end_time             time  					NOT NULL,
@@ -62,15 +87,26 @@ CREATE TABLE time_slots
 
 CREATE TABLE sessions
 (
-    session_id          BIGINT(20) PRIMARY KEY,
+    id          BIGINT(20) PRIMARY KEY,
+    created_at       TIMESTAMP     NULL,
+    created_by       VARCHAR(100)   NULL,
+    update_at        TIMESTAMP      NULL,
+    update_by        VARCHAR(100)   NULL,
+    version          INT(11)         NULL,
     session_name        varchar(80)   NOT NULL,
     session_description varchar(1024) NOT NULL,
     session_length      integer       NOT NULL
+
 );
 
 CREATE TABLE session_schedule
 (
-    schedule_id  BIGINT(20) PRIMARY KEY,
+    id  BIGINT(20) PRIMARY KEY,
+    created_at       TIMESTAMP     NULL,
+    created_by       VARCHAR(100)   NULL,
+    update_at        TIMESTAMP      NULL,
+    update_by        VARCHAR(100)   NULL,
+    version          INT(11)        NULL,
     time_slot_id BIGINT(20)     NOT NULL REFERENCES time_slots (time_slot_id),
     session_id   BIGINT(20)     NOT NULL REFERENCES sessions (session_id),
     room         varchar(30) NOT NULL
@@ -78,7 +114,12 @@ CREATE TABLE session_schedule
 
 CREATE TABLE tags
 (
-    tag_id      BIGINT(20) PRIMARY KEY,
+    id      BIGINT(20) PRIMARY KEY,
+    created_at       TIMESTAMP     NULL,
+    created_by       VARCHAR(100)   NULL,
+    update_at        TIMESTAMP      NULL,
+    update_by        VARCHAR(100)   NULL,
+    version          INT(11)        NULL,
     description varchar(30) NOT NULL
 );
 
@@ -90,7 +131,12 @@ CREATE TABLE session_tags
 
 CREATE TABLE speakers
 (
-    speaker_id    BIGINT(20) PRIMARY KEY,
+    id    BIGINT(20) PRIMARY KEY,
+    created_at       TIMESTAMP     NULL,
+    created_by       VARCHAR(100)   NULL,
+    update_at        TIMESTAMP      NULL,
+    update_by        VARCHAR(100)   NULL,
+    version          INT(11)        NULL,
     first_name    varchar(30)   NOT NULL,
     last_name     varchar(30)   NOT NULL,
     title         varchar(40)   NOT NULL,
@@ -107,7 +153,12 @@ CREATE TABLE session_speakers
 
 CREATE TABLE workshops
 (
-    workshop_id   BIGINT(20) PRIMARY KEY,
+    id   BIGINT(20) PRIMARY KEY,
+    created_at       TIMESTAMP     NULL,
+    created_by       VARCHAR(100)   NULL,
+    update_at        TIMESTAMP      NULL,
+    update_by        VARCHAR(100)   NULL,
+    version          INT(11)     NULL,
     workshop_name varchar(60)   NOT NULL,
     description   varchar(1024) NOT NULL,
     requirements  varchar(1024) NOT NULL,

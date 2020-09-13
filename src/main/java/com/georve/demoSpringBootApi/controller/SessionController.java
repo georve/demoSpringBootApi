@@ -44,7 +44,7 @@ public class SessionController {
     @PostMapping
     ResponseEntity<Session> create(@RequestBody Session session) {
 
-        if (service.exit(session)) {
+        if (service.exists(session)) {
             throw new ResourceAlreadyExists(ExceptionDefinitions.ALREADY_EXIST);
         }
 

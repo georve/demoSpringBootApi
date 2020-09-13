@@ -74,19 +74,20 @@ public class SessionControllerTest {
     @Test
     void getOneSessionById() throws Exception {
         when(service.findById(any(Long.class))).thenReturn(this.getSession());
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/sessions/1")
+        Integer param = 1;
+        mockMvc.perform(MockMvcRequestBuilders.get("/sessions/{id}",param)
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.session_id").value(1L))
+                .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.session_name").value("public general"));
     }
 
     @Test
-    public void getOneSessio_empty() throws Exception {
+    public void getOneSession_empty() throws Exception {
         when(service.findById(any(Long.class))).thenReturn(null);
+        Integer param = 1;
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/sessions/1")
+        mockMvc.perform(MockMvcRequestBuilders.get("/sessions/{id}",param)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResourceNotFoundException))
@@ -111,7 +112,7 @@ public class SessionControllerTest {
                 .content(eatToDoJSON));
 
         result.andExpect(status().isCreated())
-                .andExpect(jsonPath("$.session_id").value(1L))
+                .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.session_name").value("public general"));
     }
 
@@ -152,7 +153,7 @@ public class SessionControllerTest {
         );
 
         result.andExpect(status().isOk())
-                .andExpect(jsonPath("$.session_id").value(1L))
+                .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.session_name").value("public general"));
 
 
@@ -164,7 +165,7 @@ public class SessionControllerTest {
 
     private Session getSession() {
         Session sb=new Session();
-        sb.setSession_id(1L);
+        sb.setId(1L);
         sb.setSession_name("public general");
         sb.setSession_description("To everyone");
         sb.setSession_length(24);

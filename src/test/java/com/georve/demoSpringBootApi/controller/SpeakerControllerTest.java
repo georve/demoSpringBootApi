@@ -66,7 +66,7 @@ public class SpeakerControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/speakers/1")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.speaker_id").value(1L))
+                .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.first_name").value("Georman"));
     }
 
@@ -89,7 +89,7 @@ public class SpeakerControllerTest {
 
 
         result.andExpect(status().isCreated())
-                .andExpect(jsonPath("$.speaker_id").value(1L))
+                .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.first_name").value("Georman"));
     }
 
@@ -130,7 +130,7 @@ public class SpeakerControllerTest {
         );
 
         result.andExpect(status().isOk())
-                .andExpect(jsonPath("$.speaker_id").value(1L))
+                .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.first_name").value("Georman"));
 
 
@@ -142,7 +142,7 @@ public class SpeakerControllerTest {
         value.setLast_name("Calderon");
         value.setCompany("georve");
         value.setSpeaker_bio("nueva biografia");
-        value.setSpeaker_id(1L);
+        value.setId(1L);
         value.setTitle("titulo_1");
         return value;
     }
