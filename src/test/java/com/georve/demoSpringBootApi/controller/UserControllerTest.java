@@ -8,9 +8,12 @@ import com.georve.demoSpringBootApi.model.Session;
 import com.georve.demoSpringBootApi.model.User;
 import com.georve.demoSpringBootApi.services.SessionService;
 import com.georve.demoSpringBootApi.services.UserService;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -22,6 +25,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -40,6 +44,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class UserControllerTest {
 
+    public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+
+    @Value("${jwt.secret}")
+    private String secret;
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -50,6 +59,8 @@ public class UserControllerTest {
     void createAnewUserSuccess() throws Exception {
 
         User eatToDo = this.getUserTosave();
+        String token=this.createToken("georve");
+        when(service.findByUserName(any(String.class))).thenReturn(geUserDetails());
         when(service.exists(any(User.class))).thenReturn(false);
         when(service.saveOrUpdate(any(User.class))).thenReturn(eatToDo);
 
@@ -65,7 +76,8 @@ public class UserControllerTest {
 
         ResultActions result = mockMvc.perform(post("/users/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(eatToDoJSON));
+                .content(eatToDoJSON)
+                .header("Authorization", "Bearer " + token));
 
 
         result.andExpect(status().isCreated())
@@ -79,7 +91,9 @@ public class UserControllerTest {
     @Test
     void createAnewUserrepeated() throws Exception {
 
+        String token=this.createToken("georve");
         User eatToDo = this.getUserTosave();
+        when(service.findByUserName(any(String.class))).thenReturn(geUserDetails());
         when(service.exists(any(User.class))).thenReturn(true);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -94,7 +108,8 @@ public class UserControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/users/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(eatToDoJSON))
+                .content(eatToDoJSON)
+                .header("Authorization", "Bearer " + token))
                 .andExpect(status().isConflict())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResourceAlreadyExists))
                 .andExpect(result -> assertEquals("Resource already exists in DB.", result.getResolvedException().getMessage()));
@@ -195,5 +210,19 @@ public class UserControllerTest {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                 new ArrayList<>());
     }
+
+    public  String createToken(String username) {
+        String jwt = Jwts.builder()
+                .setSubject(username)
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
+                .signWith(SignatureAlgorithm.HS512, secret)
+                .compact();
+
+        return jwt;
+    }
+
+
+
+
 
 }
