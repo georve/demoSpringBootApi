@@ -1,7 +1,8 @@
-package com.georve.demoSpringBootApi.services;
+package com.georve.demoSpringBootApi.repository;
 
 import com.georve.demoSpringBootApi.model.AbstractBaseEntity;
-import com.georve.demoSpringBootApi.repository.AbstractBaseRepository;
+import com.georve.demoSpringBootApi.services.AbstractBaseService;
+import com.georve.demoSpringBootApi.utils.GenericsQualify;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -13,8 +14,9 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class AbstractBaseRepositoryImpl<T extends AbstractBaseEntity, ID extends Serializable>
+public abstract class AbstractBaseRepositoryImpl<T extends AbstractBaseEntity, ID extends Serializable>
         implements AbstractBaseService<T,ID> {
+
 
     private AbstractBaseRepository<T, ID> abstractBaseRepository;
 
@@ -39,8 +41,8 @@ public class AbstractBaseRepositoryImpl<T extends AbstractBaseEntity, ID extends
     }
 
     @Override
-    public Optional<T> findById(ID entityId) {
-        return  abstractBaseRepository.findById(entityId);
+    public T findById(ID entityId) {
+        return  abstractBaseRepository.getOne(entityId);
     }
 
     @Override

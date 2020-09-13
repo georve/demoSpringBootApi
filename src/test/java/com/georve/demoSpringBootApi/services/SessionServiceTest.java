@@ -31,14 +31,14 @@ public class SessionServiceTest {
     void getAllSession(){
      Session current=this.getSession();
      repository.save(current);
-     SessionService service=new SessionService(repository);
+     SessionService service=new SessionServiceImpl(repository);
 
      List<Session> list=service.findAll();
      Session lastSession=list.get(0);
 
      assertEquals(current.getSession_name(), lastSession.getSession_name());
      assertEquals(current.getSession_description(), lastSession.getSession_description());
-     assertEquals(current.getSession_id(), lastSession.getSession_id());
+     assertEquals(current.getId(), lastSession.getId());
 
 
     }
@@ -47,7 +47,7 @@ public class SessionServiceTest {
     void getOneSessionById(){
         Session current=this.getSession();
         repository.save(current);
-        SessionService service=new SessionService(repository);
+        SessionService service=new SessionServiceImpl(repository);
         //when(repository.getOne(1L)).thenReturn(this.getSession());
         Session lastSession=service.findById(1L);
         assertNotNull(lastSession);
@@ -58,8 +58,8 @@ public class SessionServiceTest {
     void deleteById(){
         Session current=this.getSession();
         Session saved=repository.saveAndFlush(current);
-        SessionService service=new SessionService(repository);
-        service.deleteById(saved.getSession_id());
+        SessionService service=new SessionServiceImpl(repository);
+        service.deleteById(saved.getId());
 
         Double lastSession=service.count();
         assertTrue(lastSession.compareTo(0.0)==0);
@@ -67,7 +67,7 @@ public class SessionServiceTest {
 
     @Test
     void saveASession() {
-        SessionService service=new SessionService(repository);
+        SessionService service=new SessionServiceImpl(repository);
         Session todoSample = this.getSession();
         service.saveOrUpdate(todoSample);
         assertEquals(1.0, service.count());
@@ -76,7 +76,7 @@ public class SessionServiceTest {
 
     private Session getSession() {
         Session sb=new Session();
-        sb.setSession_id(1L);
+        sb.setId(1L);
         sb.setSession_name("public general");
         sb.setSession_description("To everyone");
         sb.setSession_length(24);

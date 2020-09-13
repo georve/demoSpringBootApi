@@ -36,11 +36,11 @@ public class SpeakerController {
     @GetMapping
     @RequestMapping("{id}")
     ResponseEntity<Speaker> getSpeakerById(@PathVariable Long id){
-        Optional<Speaker> current=service.findById(id);
-        if(!current.isPresent()){
+        Speaker current=service.findById(id);
+        if(current==null){
             throw new ResourceNotFoundException(ExceptionDefinitions.NOT_FOUND);
         }
-        return new ResponseEntity<>(current.get(), HttpStatus.OK);
+        return new ResponseEntity<>(current, HttpStatus.OK);
     }
 
     @PostMapping
@@ -54,8 +54,8 @@ public class SpeakerController {
 
     @RequestMapping(value="{id}",method=RequestMethod.DELETE)
     ResponseEntity<Void> delete(@PathVariable Long id) {
-        Optional<Speaker> current=service.findById(id);
-        if(!current.isPresent()){
+        Speaker current=service.findById(id);
+        if(current==null){
             throw new ResourceNotFoundException(ExceptionDefinitions.NOT_FOUND);
         }
 
@@ -66,16 +66,16 @@ public class SpeakerController {
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
     public ResponseEntity<Speaker> update(@PathVariable Long id, @RequestBody Speaker se) {
 
-        Optional<Speaker> current = service.findById(id);
+        Speaker current=service.findById(id);
 
-        if (!current.isPresent()) {
+        if (current==null) {
             throw new ResourceNotFoundException(ExceptionDefinitions.NOT_FOUND);
         }
 
         BeanUtils.copyProperties(se,current,"speaker_id");
 
-        service.saveOrUpdate(current.get());
-        return new ResponseEntity<Speaker>(current.get(), HttpStatus.OK);
+        service.saveOrUpdate(current);
+        return new ResponseEntity<Speaker>(current, HttpStatus.OK);
     }
 
 }

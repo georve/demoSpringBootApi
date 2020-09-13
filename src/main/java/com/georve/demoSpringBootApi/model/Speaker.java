@@ -30,9 +30,7 @@ public class Speaker extends AbstractBaseEntity {
     @ManyToMany(mappedBy="speakers")
     private List<Session> sessions;
 
-    @JsonIgnore
-    @ManyToMany(mappedBy="speakers")
-    private List<Workshops> workshops;
+
 
     public Speaker(){}
 
@@ -92,14 +90,6 @@ public class Speaker extends AbstractBaseEntity {
 
     public void setSessions(List<Session> sessions) {
         this.sessions = sessions;
-    }
-
-    public List<Workshops> getWorkshops() {
-        return workshops;
-    }
-
-    public void setWorkshops(List<Workshops> workshops) {
-        this.workshops = workshops;
     }
 
 }

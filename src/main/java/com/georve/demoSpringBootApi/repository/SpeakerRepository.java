@@ -2,10 +2,9 @@ package com.georve.demoSpringBootApi.repository;
 
 
 import com.georve.demoSpringBootApi.model.Speaker;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository("SpeakerRepository")
+@Repository("speakerrepository")
 public interface SpeakerRepository extends AbstractBaseRepository<Speaker, Long>{
 
 

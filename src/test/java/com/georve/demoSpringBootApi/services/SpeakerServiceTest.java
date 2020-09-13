@@ -48,8 +48,8 @@ public class SpeakerServiceTest {
         repository.save(current);
         SpeakerService service=new SpeakerServiceImpl(repository);
         //when(repository.getOne(1L)).thenReturn(this.getSession());
-        Optional<Speaker> lastSession=service.findById(1L);
-        assertNotNull(lastSession.get());
+        Speaker lastSession=service.findById(1L);
+        assertNotNull(lastSession);
 
     }
 

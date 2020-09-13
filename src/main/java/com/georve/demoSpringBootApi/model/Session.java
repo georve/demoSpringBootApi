@@ -10,11 +10,9 @@ import java.util.List;
 @Table(name="sessions") // the table in the database tht will contain our cars data
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 @EntityListeners(AuditingEntityListener.class)
-public class Session {
+public class Session extends AbstractBaseEntity {
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long session_id;
+
     private String session_name;
     private String session_description;
     private Integer session_length;
@@ -31,13 +29,6 @@ public class Session {
 
      }
 
-    public Long getSession_id() {
-        return session_id;
-    }
-
-    public void setSession_id(Long session_id) {
-        this.session_id = session_id;
-    }
 
     public String getSession_name() {
         return session_name;

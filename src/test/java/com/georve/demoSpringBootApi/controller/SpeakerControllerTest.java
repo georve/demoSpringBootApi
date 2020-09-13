@@ -61,12 +61,12 @@ public class SpeakerControllerTest {
 
     @Test
     void getOneSessionById() throws Exception {
-        when(service.findById(any(Long.class))).thenReturn(Optional.of(this.getSpeaker()));
+        when(service.findById(any(Long.class))).thenReturn(this.getSpeaker());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/speakers/1")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.speaker_id").value(1L))
+                .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.first_name").value("Georman"));
     }
 
@@ -89,14 +89,14 @@ public class SpeakerControllerTest {
 
 
         result.andExpect(status().isCreated())
-                .andExpect(jsonPath("$.speaker_id").value(1L))
+                .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.first_name").value("Georman"));
     }
 
     @Test
     void successfullyDeleteSessionById() throws Exception{
 
-        when(service.findById(any(Long.class))).thenReturn(Optional.of(this.getSpeaker()));
+        when(service.findById(any(Long.class))).thenReturn(this.getSpeaker());
         doNothing().when(service).deleteById(any(Long.class));
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/speakers/1")
@@ -112,7 +112,7 @@ public class SpeakerControllerTest {
 
         Speaker eatToDo = this.getSpeaker();
 
-        when(service.findById(any(Long.class))).thenReturn(Optional.of(this.getSpeaker()));
+        when(service.findById(any(Long.class))).thenReturn(this.getSpeaker());
         when(service.saveOrUpdate(any(Speaker.class))).thenReturn(this.getSpeaker());
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -130,7 +130,7 @@ public class SpeakerControllerTest {
         );
 
         result.andExpect(status().isOk())
-                .andExpect(jsonPath("$.speaker_id").value(1L))
+                .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.first_name").value("Georman"));
 
 

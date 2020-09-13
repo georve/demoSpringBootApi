@@ -14,7 +14,7 @@ public interface AbstractBaseService<T extends AbstractBaseEntity, ID extends Se
 
     public double count();
 
-    public abstract Optional<T> findById(ID entityId);
+    public abstract T findById(ID entityId);
 
     public abstract void deleteById(ID entityId);
 

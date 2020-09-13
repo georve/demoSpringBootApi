@@ -2,8 +2,7 @@ package com.georve.demoSpringBootApi.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Date;
 
 @MappedSuperclass
 public class AbstractBaseEntity implements Serializable{
@@ -14,12 +13,33 @@ public class AbstractBaseEntity implements Serializable{
 
     @Version
     private int version;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String createdBy;
+    private String updatedBy;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedAt;
 
     public AbstractBaseEntity() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
+
+    }
+
+    /**
+     * Sets createdAt before insert
+     */
+    @PrePersist
+    public void setCreationDate() {
+        this.createdAt = new Date();
+    }
+
+    /**
+     * Sets updatedAt before update
+     */
+    @PreUpdate
+    public void setChangeDate() {
+        this.updatedAt = new Date();
     }
 
     public Long getId() {
@@ -38,19 +58,35 @@ public class AbstractBaseEntity implements Serializable{
         this.version = version;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
     }
 }
