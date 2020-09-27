@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootApplication
-@ActiveProfiles(value = "development")
 public class DemoSpringBootApiApplication {
 
 	public static void main(String[] args) {
