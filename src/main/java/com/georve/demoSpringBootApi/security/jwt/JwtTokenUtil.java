@@ -1,4 +1,4 @@
-package com.georve.demoSpringBootApi.config;
+package com.georve.demoSpringBootApi.security.jwt;
 
 import com.georve.demoSpringBootApi.model.User;
 import io.jsonwebtoken.Claims;
