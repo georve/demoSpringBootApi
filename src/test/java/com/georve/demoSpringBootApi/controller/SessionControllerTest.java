@@ -6,8 +6,9 @@ import com.georve.demoSpringBootApi.error.CustomException;
 import com.georve.demoSpringBootApi.error.ResourceNotFoundException;
 import com.georve.demoSpringBootApi.model.Session;
 import com.georve.demoSpringBootApi.model.User;
+import com.georve.demoSpringBootApi.security.services.UserDetailsServiceImpl;
 import com.georve.demoSpringBootApi.services.SessionService;
-import com.georve.demoSpringBootApi.services.UserService;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -52,7 +54,7 @@ public class SessionControllerTest {
     private String secret;
 
     @MockBean
-    private UserService userService;
+    private UserDetailsServiceImpl userService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -68,7 +70,7 @@ public class SessionControllerTest {
     void getAllSession() throws Exception {
         List<Session> sessions=new ArrayList<Session>();
         sessions.add(this.getSession());
-        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
+        when(userService.loadUserByUsername(any(String.class))).thenReturn(geUserDetails());
         when(service.findAll()).thenReturn(sessions);
         String token=this.createToken("georve");
         mockMvc.perform(MockMvcRequestBuilders.get("/sessions")
@@ -81,7 +83,7 @@ public class SessionControllerTest {
     @Test
     public void getAllSession_empty() throws Exception {
         List<Session> sessions=new ArrayList<Session>();
-        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
+        when(userService.loadUserByUsername(any(String.class))).thenReturn(geUserDetails());
         when(service.findAll()).thenReturn(sessions);
        String token=this.createToken("georve");
         mockMvc.perform(MockMvcRequestBuilders.get("/sessions")
@@ -94,7 +96,7 @@ public class SessionControllerTest {
 
     @Test
     void getOneSessionById() throws Exception {
-        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
+        when(userService.loadUserByUsername(any(String.class))).thenReturn(geUserDetails());
         when(service.findById(any(Long.class))).thenReturn(this.getSession());
         Integer param = 1;
         String token=this.createToken("georve");
@@ -108,7 +110,7 @@ public class SessionControllerTest {
 
     @Test
     public void getOneSession_empty() throws Exception {
-        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
+        when(userService.loadUserByUsername(any(String.class))).thenReturn(geUserDetails());
         when(service.findById(any(Long.class))).thenReturn(null);
         Integer param = 1;
         String token=this.createToken("georve");
@@ -123,7 +125,7 @@ public class SessionControllerTest {
     @Test
     void successfullyCreateASession() throws Exception {
         Session eatToDo = this.getSession();
-        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
+        when(userService.loadUserByUsername(any(String.class))).thenReturn(geUserDetails());
         when(service.saveOrUpdate(any(Session.class))).thenReturn(eatToDo);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -146,7 +148,7 @@ public class SessionControllerTest {
 
     @Test
     void successfullyDeleteSessionById() throws Exception{
-        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
+        when(userService.loadUserByUsername(any(String.class))).thenReturn(geUserDetails());
         when(service.findById(any(Long.class))).thenReturn(this.getSession());
         doNothing().when(service).deleteById(any(Long.class));
         String token=this.createToken("georve");
@@ -163,7 +165,7 @@ public class SessionControllerTest {
     void successfullyUpdate() throws Exception{
 
         Session eatToDo = this.getSession();
-        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
+        when(userService.loadUserByUsername(any(String.class))).thenReturn(geUserDetails());
         when(service.findById(any(Long.class))).thenReturn(this.getSession());
         when(service.saveOrUpdate(any(Session.class))).thenReturn(this.getSession());
         String token=this.createToken("georve");

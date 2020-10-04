@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.georve.demoSpringBootApi.model.Session;
 import com.georve.demoSpringBootApi.model.Speaker;
 import com.georve.demoSpringBootApi.model.User;
+import com.georve.demoSpringBootApi.security.services.UserDetailsServiceImpl;
 import com.georve.demoSpringBootApi.services.SessionService;
 import com.georve.demoSpringBootApi.services.SpeakerService;
 import com.georve.demoSpringBootApi.services.UserService;
@@ -50,7 +51,7 @@ public class SpeakerControllerTest {
     private String secret;
 
     @MockBean
-    private UserService userService;
+    private UserDetailsServiceImpl userService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -64,7 +65,7 @@ public class SpeakerControllerTest {
     void getAllSpeakers() throws Exception {
         List<Speaker> sp=new ArrayList<Speaker>();
         sp.add(this.getSpeaker());
-        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
+        when(userService.loadUserByUsername(any(String.class))).thenReturn(geUserDetails());
         when(service.findAll()).thenReturn(sp);
         String token=this.createToken("georve");
         mockMvc.perform(MockMvcRequestBuilders.get("/speakers")
@@ -78,7 +79,7 @@ public class SpeakerControllerTest {
 
     @Test
     void getOneSessionById() throws Exception {
-        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
+        when(userService.loadUserByUsername(any(String.class))).thenReturn(geUserDetails());
         when(service.findById(any(Long.class))).thenReturn(this.getSpeaker());
         String token=this.createToken("georve");
         mockMvc.perform(MockMvcRequestBuilders.get("/speakers/1")
@@ -92,7 +93,7 @@ public class SpeakerControllerTest {
     @Test
     void successfullyCreateASpeaker() throws Exception {
         Speaker eatToDo = this.getSpeaker();
-        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
+        when(userService.loadUserByUsername(any(String.class))).thenReturn(geUserDetails());
         when(service.saveOrUpdate(any(Speaker.class))).thenReturn(eatToDo);
         String token=this.createToken("georve");
         ObjectMapper objectMapper = new ObjectMapper();
@@ -116,7 +117,7 @@ public class SpeakerControllerTest {
 
     @Test
     void successfullyDeleteSessionById() throws Exception{
-        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
+        when(userService.loadUserByUsername(any(String.class))).thenReturn(geUserDetails());
         when(service.findById(any(Long.class))).thenReturn(this.getSpeaker());
         doNothing().when(service).deleteById(any(Long.class));
         String token=this.createToken("georve");
@@ -133,7 +134,7 @@ public class SpeakerControllerTest {
     void successfullyUpdate() throws Exception{
 
         Speaker eatToDo = this.getSpeaker();
-        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
+        when(userService.loadUserByUsername(any(String.class))).thenReturn(geUserDetails());
         when(service.findById(any(Long.class))).thenReturn(this.getSpeaker());
         when(service.saveOrUpdate(any(Speaker.class))).thenReturn(this.getSpeaker());
         String token=this.createToken("georve");
