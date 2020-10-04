@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -60,7 +61,7 @@ public class UserControllerTest {
 
         User eatToDo = this.getUserTosave();
         String token=this.createToken("georve");
-        when(service.findByUserName(any(String.class))).thenReturn(geUserDetails());
+        when(service.findByUsername(any(String.class))).thenReturn(Optional.of(getUserTosave()));
         when(service.exists(any(User.class))).thenReturn(false);
         when(service.saveOrUpdate(any(User.class))).thenReturn(eatToDo);
 
@@ -93,7 +94,7 @@ public class UserControllerTest {
 
         String token=this.createToken("georve");
         User eatToDo = this.getUserTosave();
-        when(service.findByUserName(any(String.class))).thenReturn(geUserDetails());
+        when(service.findByUsername(any(String.class))).thenReturn(Optional.of(getUserTosave()));
         when(service.exists(any(User.class))).thenReturn(true);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -121,7 +122,7 @@ public class UserControllerTest {
 
         User eatToDo = this.getUserTosave();
 
-        when(service.findByUserName(any(String.class))).thenReturn(null);
+        when(service.findByUsername(any(String.class))).thenReturn(null);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String eatToDoJSON = null;
@@ -147,7 +148,7 @@ public class UserControllerTest {
 
         User eatToDo = this.getUserTosave();
 
-        when(service.findByUserName(any(String.class))).thenReturn(geUserDetails());
+        when(service.findByUsername(any(String.class))).thenReturn(Optional.of(getUserTosave()));
 
         ObjectMapper objectMapper = new ObjectMapper();
         String eatToDoJSON = null;
@@ -174,7 +175,7 @@ public class UserControllerTest {
 
         User eatToDo = this.getUserTosave();
 
-        when(service.findByUserName(any(String.class))).thenReturn(geUserDetails());
+        when(service.findByUsername(any(String.class))).thenReturn(Optional.of(getUserTosave()));
 
         ObjectMapper objectMapper = new ObjectMapper();
         String eatToDoJSON = null;

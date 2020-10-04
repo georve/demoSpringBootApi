@@ -127,13 +127,5 @@ public class UserController {
     }
 
 
-    private void authenticate(String username, String password) throws CustomException {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        } catch (DisabledException e) {
-            throw new CustomException("USER_DISABLED");
-        } catch (BadCredentialsException e) {
-            throw new CustomException("INVALID_CREDENTIALS");
-        }
-    }
+
 }

@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface UserService extends AbstractBaseService<User, Long> {
 
-    Optional<User> findByUserName(String any);
+    Optional<User> findByUsername(String any);
 
     Boolean existsByUsername(String username);
 

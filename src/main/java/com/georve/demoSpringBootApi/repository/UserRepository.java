@@ -10,10 +10,10 @@ import java.util.Optional;
 @Repository("userrepository")
 public interface UserRepository extends AbstractBaseRepository<User, Long>{
 
-    @Query(value="Select u from User u where u.username=:username")
-    Optional<User> findByUserName(@Param("username") String username);
 
-    Boolean existsByUserName(String username);
+    Optional<User> findByUsername(String username);
+
+    Boolean existsByUsername(String username);
 
     Boolean existsByEmail(String email);
 }

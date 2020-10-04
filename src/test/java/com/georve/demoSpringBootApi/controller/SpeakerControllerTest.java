@@ -64,7 +64,7 @@ public class SpeakerControllerTest {
     void getAllSpeakers() throws Exception {
         List<Speaker> sp=new ArrayList<Speaker>();
         sp.add(this.getSpeaker());
-        when(userService.findByUserName(any(String.class))).thenReturn(geUserDetails());
+        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
         when(service.findAll()).thenReturn(sp);
         String token=this.createToken("georve");
         mockMvc.perform(MockMvcRequestBuilders.get("/speakers")
@@ -78,7 +78,7 @@ public class SpeakerControllerTest {
 
     @Test
     void getOneSessionById() throws Exception {
-        when(userService.findByUserName(any(String.class))).thenReturn(geUserDetails());
+        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
         when(service.findById(any(Long.class))).thenReturn(this.getSpeaker());
         String token=this.createToken("georve");
         mockMvc.perform(MockMvcRequestBuilders.get("/speakers/1")
@@ -92,7 +92,7 @@ public class SpeakerControllerTest {
     @Test
     void successfullyCreateASpeaker() throws Exception {
         Speaker eatToDo = this.getSpeaker();
-        when(userService.findByUserName(any(String.class))).thenReturn(geUserDetails());
+        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
         when(service.saveOrUpdate(any(Speaker.class))).thenReturn(eatToDo);
         String token=this.createToken("georve");
         ObjectMapper objectMapper = new ObjectMapper();
@@ -116,7 +116,7 @@ public class SpeakerControllerTest {
 
     @Test
     void successfullyDeleteSessionById() throws Exception{
-        when(userService.findByUserName(any(String.class))).thenReturn(geUserDetails());
+        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
         when(service.findById(any(Long.class))).thenReturn(this.getSpeaker());
         doNothing().when(service).deleteById(any(Long.class));
         String token=this.createToken("georve");
@@ -133,7 +133,7 @@ public class SpeakerControllerTest {
     void successfullyUpdate() throws Exception{
 
         Speaker eatToDo = this.getSpeaker();
-        when(userService.findByUserName(any(String.class))).thenReturn(geUserDetails());
+        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
         when(service.findById(any(Long.class))).thenReturn(this.getSpeaker());
         when(service.saveOrUpdate(any(Speaker.class))).thenReturn(this.getSpeaker());
         String token=this.createToken("georve");

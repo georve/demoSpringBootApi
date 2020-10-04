@@ -31,13 +31,13 @@ public class UserServiceImpl extends AbstractBaseRepositoryImpl<User, Long>
 
 
     @Override
-    public Optional<User> findByUserName(String any) {
-        return repository.findByUserName(any);
+    public Optional<User> findByUsername(String any) {
+        return repository.findByUsername(any);
     }
 
     @Override
     public Boolean existsByUsername(String username) {
-        return repository.existsByUserName(username);
+        return repository.existsByUsername(username);
     }
 
     @Override

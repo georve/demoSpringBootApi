@@ -68,7 +68,7 @@ public class SessionControllerTest {
     void getAllSession() throws Exception {
         List<Session> sessions=new ArrayList<Session>();
         sessions.add(this.getSession());
-        when(userService.findByUserName(any(String.class))).thenReturn(geUserDetails());
+        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
         when(service.findAll()).thenReturn(sessions);
         String token=this.createToken("georve");
         mockMvc.perform(MockMvcRequestBuilders.get("/sessions")
@@ -81,7 +81,7 @@ public class SessionControllerTest {
     @Test
     public void getAllSession_empty() throws Exception {
         List<Session> sessions=new ArrayList<Session>();
-        when(userService.findByUserName(any(String.class))).thenReturn(geUserDetails());
+        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
         when(service.findAll()).thenReturn(sessions);
        String token=this.createToken("georve");
         mockMvc.perform(MockMvcRequestBuilders.get("/sessions")
@@ -94,7 +94,7 @@ public class SessionControllerTest {
 
     @Test
     void getOneSessionById() throws Exception {
-        when(userService.findByUserName(any(String.class))).thenReturn(geUserDetails());
+        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
         when(service.findById(any(Long.class))).thenReturn(this.getSession());
         Integer param = 1;
         String token=this.createToken("georve");
@@ -108,7 +108,7 @@ public class SessionControllerTest {
 
     @Test
     public void getOneSession_empty() throws Exception {
-        when(userService.findByUserName(any(String.class))).thenReturn(geUserDetails());
+        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
         when(service.findById(any(Long.class))).thenReturn(null);
         Integer param = 1;
         String token=this.createToken("georve");
@@ -123,7 +123,7 @@ public class SessionControllerTest {
     @Test
     void successfullyCreateASession() throws Exception {
         Session eatToDo = this.getSession();
-        when(userService.findByUserName(any(String.class))).thenReturn(geUserDetails());
+        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
         when(service.saveOrUpdate(any(Session.class))).thenReturn(eatToDo);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -146,7 +146,7 @@ public class SessionControllerTest {
 
     @Test
     void successfullyDeleteSessionById() throws Exception{
-        when(userService.findByUserName(any(String.class))).thenReturn(geUserDetails());
+        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
         when(service.findById(any(Long.class))).thenReturn(this.getSession());
         doNothing().when(service).deleteById(any(Long.class));
         String token=this.createToken("georve");
@@ -163,7 +163,7 @@ public class SessionControllerTest {
     void successfullyUpdate() throws Exception{
 
         Session eatToDo = this.getSession();
-        when(userService.findByUserName(any(String.class))).thenReturn(geUserDetails());
+        when(userService.findByUsername(any(String.class))).thenReturn(Optional.of(getUserToCheck()));
         when(service.findById(any(Long.class))).thenReturn(this.getSession());
         when(service.saveOrUpdate(any(Session.class))).thenReturn(this.getSession());
         String token=this.createToken("georve");
